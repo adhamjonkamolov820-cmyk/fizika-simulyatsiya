@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fizika — Interaktiv simulyatsiya</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:linear-gradient(135deg,#eef6ff,#f8fbff);color:#172033}
+header{background:linear-gradient(135deg,#1457d9,#27a8f2);color:white;padding:28px 18px;text-align:center}
+header h1{margin:0 0 8px;font-size:clamp(25px,6vw,42px)}
+header p{margin:0;font-size:17px}
+nav{display:flex;gap:8px;overflow:auto;padding:12px;background:white;position:sticky;top:0;z-index:5;box-shadow:0 2px 12px #0001}
+nav button{border:0;border-radius:12px;padding:11px 15px;background:#edf3ff;color:#1552c5;font-weight:700;white-space:nowrap;cursor:pointer}
+nav button.active,button.primary{background:#1769e0;color:white}
+main{max-width:1050px;margin:auto;padding:20px}
+section{display:none}
+section.active{display:block}
+.card{background:white;border-radius:20px;padding:22px;margin:16px 0;box-shadow:0 8px 25px #23406b18}
+h2{color:#1552c5}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px}
+.item{border:2px solid #e4edff;border-radius:16px;padding:18px;text-align:center;cursor:pointer;transition:.2s;background:#fbfdff}
+.item:hover{transform:translateY(-3px);border-color:#4b91ef}
+.icon{font-size:42px;margin-bottom:8px}
+.info{margin-top:14px;padding:15px;border-radius:14px;background:#eef6ff;min-height:55px}
+.steps{display:flex;flex-wrap:wrap;gap:10px;margin-top:15px}
+.step{padding:13px 15px;border-radius:14px;background:#f1f4f9;font-weight:bold}
+.step.done{background:#d9f8e6;color:#08783b}
+.phenomenon{min-height:120px}
+button{font-size:15px;border:0;border-radius:12px;padding:12px 17px;cursor:pointer}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:15px}
+.tempbox{text-align:center}
+.temp{font-size:28px;font-weight:bold;color:#e05252}
+.molecule{font-size:45px;letter-spacing:8px;min-height:70px;padding:15px}
+.question{font-size:18px;font-weight:bold}
+.option{display:block;width:100%;text-align:left;margin:9px 0;background:#f2f6fc}
+.option.correct{background:#c9f4d9;color:#08783b}
+.option.wrong{background:#ffd5d5;color:#a11}
+#result{font-size:22px;font-weight:bold;text-align:center}
+footer{text-align:center;padding:30px;color:#667085}
+.badge{display:inline-block;padding:6px 10px;border-radius:20px;background:#e6f0ff;color:#1552c5;font-size:13px;font-weight:bold}
+@media(max-width:600px){main{padding:12px}.card{padding:17px}nav button{padding:9px 12px}}
+</style>
+</head>
+<body>
+<header>
+<h1>🔬 Fizika: interaktiv simulyatsiya</h1>
+<p>“Fizika nimani o‘rganadi. Fizik hodisalar”</p>
+</header>
+
+<nav>
+<button class="active" onclick="showSection('intro',this)">1. Fizika</button>
+<button onclick="showSection('objects',this)">2. Obyekt va vazifalar</button>
+<button onclick="showSection('matter',this)">3. Jism va modda</button>
+<button onclick="showSection('quiz',this)">📝 Test</button>
+</nav>
+
+<main>
+<section id="intro" class="active">
+<div class="card">
+<span class="badge">1-BO‘LIM</span>
+<h2>Fizika fani haqida tushuncha</h2>
+<p><b>Fizika</b> — tabiatdagi jismlar, moddalar, harakatlar va hodisalarning umumiy qonuniyatlarini o‘rganuvchi fan.</p>
+<p>Quyidagi obyektlarni bosing va fizik hodisani kuzating:</p>
+<div class="grid">
+<div class="item" onclick="explain('⚽ To‘pning harakatlanishi — mexanik hodisa. Fizika jismlarning harakati va o‘zaro ta’sirini o‘rganadi.')"><div class="icon">⚽</div>Harakat</div>
+<div class="item" onclick="explain('🔥 Suvning qizishi — issiqlik hodisasi. Harorat o‘zgarishi fizik jarayon bilan bog‘liq.')"><div class="icon">🔥</div>Issiqlik</div>
+<div class="item" onclick="explain('💡 Lampochkaning yonishi — elektr hodisasi. Elektr toki energiyani boshqa ko‘rinishga aylantiradi.')"><div class="icon">💡</div>Elektr</div>
+<div class="item" onclick="explain('🧲 Magnitning temirni tortishi — magnit hodisasi.')"><div class="icon">🧲</div>Magnit</div>
+<div class="item" onclick="explain('☀️ Quyosh nuri — yorug‘lik hodisasi. Yorug‘lik jismlarni ko‘rishimizga imkon beradi.')"><div class="icon">☀️</div>Yorug‘lik</div>
+<div class="item" onclick="explain('🔊 Tovush — tebranishlarning muhit orqali tarqalishi natijasida yuzaga keladigan hodisa.')"><div class="icon">🔊</div>Tovush</div>
+</div>
+<div id="introInfo" class="info">👆 Obyektlardan birini bosing.</div>
+</div>
+
+<div class="card">
+<h2>🔎 Fizik tadqiqot bosqichlari</h2>
+<p>Quyidagi bosqichlarni ketma-ket bosing:</p>
+<div class="steps">
+<div class="step" onclick="completeStep(this)">1️⃣ Kuzatish</div>
+<div class="step" onclick="completeStep(this)">2️⃣ Tajriba</div>
+<div class="step" onclick="completeStep(this)">3️⃣ O‘lchash</div>
+<div class="step" onclick="completeStep(this)">4️⃣ Xulosa</div>
+</div>
+<div id="stepInfo" class="info">Har bir bosqichni bosib ko‘ring.</div>
+</div>
+</section>
+
+<section id="objects">
+<div class="card">
+<span class="badge">2-BO‘LIM</span>
+<h2>Fizikaning o‘rganish obyekti va vazifalari</h2>
+<p>Fizika turli fizik hodisalarni kuzatadi, tajriba orqali tekshiradi, o‘lchaydi va ular orasidagi qonuniyatlarni aniqlaydi.</p>
+<div class="grid">
+<div class="item" onclick="explainObj('Mexanik hodisa','⚙️ Jismlarning harakati, tezligi, kuch va o‘zaro ta’siri bilan bog‘liq hodisalar.')"><div class="icon">⚙️</div>Mexanik</div>
+<div class="item" onclick="explainObj('Issiqlik hodisasi','🌡️ Jismlarning qizishi, sovishi, erishi va bug‘lanishi kabi jarayonlar.')"><div class="icon">🌡️</div>Issiqlik</div>
+<div class="item" onclick="explainObj('Elektr hodisasi','⚡ Elektr zaryadlari va elektr toki bilan bog‘liq hodisalar.')"><div class="icon">⚡</div>Elektr</div>
+<div class="item" onclick="explainObj('Magnit hodisasi','🧲 Magnit maydoni va magnitlarning jismlarga ta’siri.')"><div class="icon">🧲</div>Magnit</div>
+<div class="item" onclick="explainObj('Yorug‘lik hodisasi','🔦 Yorug‘likning tarqalishi, qaytishi va sinishi bilan bog‘liq hodisalar.')"><div class="icon">🔦</div>Yorug‘lik</div>
+<div class="item" onclick="explainObj('Tovush hodisasi','🎵 Tebranish va tovushning muhitda tarqalishi.')"><div class="icon">🎵</div>Tovush</div>
+</div>
+<div id="objInfo" class="info">👆 Hodisa turini tanlang.</div>
+</div>
+
+<div class="card">
+<h2>🎯 Fizikaning asosiy vazifalari</h2>
+<div class="steps">
+<div class="step">🔍 Kuzatish</div><div class="step">🧪 Tajriba</div><div class="step">📏 O‘lchash</div><div class="step">📐 Qonuniyatni aniqlash</div><div class="step">💡 Xulosa</div>
+</div>
+</div>
+</section>
+
+<section id="matter">
+<div class="card">
+<span class="badge">3-BO‘LIM</span>
+<h2>Fizik jismlar va moddalar</h2>
+<p><b>Fizik jism</b> — ma’lum shakl va hajmga ega bo‘lgan predmet. <b>Modda</b> — jismlarni tashkil etuvchi material.</p>
+<div class="grid">
+<div class="item" onclick="matterInfo('📘 Kitob','Jism','Qog‘oz, siyoh va boshqa materiallardan tashkil topgan.')"><div class="icon">📘</div>Kitob</div>
+<div class="item" onclick="matterInfo('✏️ Qalam','Jism','Yog‘och, grafit yoki boshqa materiallardan tashkil topgan.')"><div class="icon">✏️</div>Qalam</div>
+<div class="item" onclick="matterInfo('💧 Suv','Modda','Suyuqlik holatidagi modda. U idish shaklini egallaydi.')"><div class="icon">💧</div>Suv</div>
+<div class="item" onclick="matterInfo('🔩 Temir','Modda','Metall modda. Undan turli jismlar tayyorlanadi.')"><div class="icon">🔩</div>Temir</div>
+<div class="item" onclick="matterInfo('🪨 Tosh','Jism','Tabiiy qattiq jism; turli minerallardan tashkil topishi mumkin.')"><div class="icon">🪨</div>Tosh</div>
+<div class="item" onclick="matterInfo('🌳 Yog‘och','Modda','O‘simliklardan olinadigan qattiq material.')"><div class="icon">🌳</div>Yog‘och</div>
+</div>
+<div id="matterInfo" class="info">👆 Obyektni bosing.</div>
+</div>
+
+<div class="card tempbox">
+<h2>🌡️ Moddaning holatlari simulyatsiyasi</h2>
+<p>Haroratni o‘zgartiring va suvning holatini kuzating.</p>
+<div class="temp" id="temp">20°C</div>
+<div class="molecule" id="molecule">• • • • • • • •</div>
+<div id="state"><b>Suyuq holat</b> 💧</div>
+<div class="actions">
+<button class="primary" onclick="changeTemp(-10)">➖ Sovutish</button>
+<button onclick="changeTemp(10)">➕ Isitish</button>
+<button onclick="resetTemp()">🔄 Qayta boshlash</button>
+</div>
+</div>
+</section>
+
+<section id="quiz">
+<div class="card">
+<span class="badge">YAKUNIY NAZORAT</span>
+<h2>📝 Bilimingizni sinang</h2>
+<div id="quizBox"></div>
+<div id="result"></div>
+</div>
+</section>
+</main>
+
+<footer>
+Fizika fanidan interaktiv o‘quv simulyatsiyasi • HTML + CSS + JavaScript
+</footer>
+
+<script>
+function showSection(id,btn){
+ document.querySelectorAll('section').forEach(s=>s.classList.remove('active'));
+ document.getElementById(id).classList.add('active');
+ document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+ btn.classList.add('active');
+ if(id==='quiz') renderQuiz();
+ window.scrollTo({top:0,behavior:'smooth'});
+}
+function explain(t){document.getElementById('introInfo').textContent=t}
+const stepTexts=[
+'Kuzatish — tabiatdagi hodisani diqqat bilan ko‘rish va tavsiflash.',
+'Tajriba — hodisani maxsus sharoitda tekshirish.',
+'O‘lchash — fizik kattaliklarni asbob yordamida aniqlash.',
+'Xulosa — tajriba va kuzatishlardan kelib chiqadigan ilmiy natija.'
+];
+let stepIndex=0;
+function completeStep(el){
+ el.classList.add('done');
+ document.getElementById('stepInfo').textContent=stepTexts[stepIndex%4];
+ stepIndex++;
+}
+function explainObj(title,text){document.getElementById('objInfo').innerHTML='<b>'+title+'</b><br>'+text}
+function matterInfo(title,type,text){document.getElementById('matterInfo').innerHTML='<b>'+title+'</b> — <b>'+type+'</b><br>'+text}
+let temperature=20;
+function changeTemp(n){
+ temperature+=n;
+ if(temperature>120)temperature=120;
+ if(temperature<-30)temperature=-30;
+ document.getElementById('temp').textContent=temperature+'°C';
+ let state,mol;
+ if(temperature<=0){state='<b>Qattiq holat</b> 🧊';mol='••••••••';}
+ else if(temperature<100){state='<b>Suyuq holat</b> 💧';mol='•  • •   •  • •';}
+ else{state='<b>Gaz holat</b> 💨';mol='•       •        •';}
+ document.getElementById('state').innerHTML=state;
+ document.getElementById('molecule').textContent=mol;
+}
+function resetTemp(){temperature=20;changeTemp(0)}
+const questions=[
+['Fizika nimani o‘rganadi?',['Faqat hayvonlarni','Tabiatdagi jismlar va hodisalarni','Faqat tarixni','Faqat o‘simliklarni']],1],
+['Lampochkaning yonishi qaysi hodisaga misol?',['Elektr','Mexanik','Tovush','Magnit']],0],
+['Muzning erishi qanday hodisa?',['Yorug‘lik','Issiqlik','Tovush','Magnit']],1],
+['Kitob nima?',['Modda','Fizik jism','Fizik kattalik','Hodisa']],1],
+['Suvning 100°C atrofida qaynashi natijasida qaysi holat hosil bo‘ladi?',['Qattiq','Suyuq','Gaz','Metall']],2]
+];
+let score=0,answered=0;
+function renderQuiz(){
+ score=0;answered=0;
+ const box=document.getElementById('quizBox'); box.innerHTML='';
+ questions.forEach((q,i)=>{
+  const d=document.createElement('div');d.className='card';
+  d.innerHTML='<div class="question">'+(i+1)+'. '+q[0]+'</div>';
+  q[1].forEach((o,j)=>{
+   const b=document.createElement('button');b.className='option';b.textContent=o;
+   b.onclick=()=>answer(b,i,j,d);d.appendChild(b);
+  });
+  box.appendChild(d);
+ });
+ document.getElementById('result').textContent='';
+}
+function answer(btn,i,j,d){
+ if(d.dataset.done)return;
+ d.dataset.done='1';answered++;
+ const buttons=d.querySelectorAll('.option');
+ if(j===questions[i][2]){btn.classList.add('correct');score++}
+ else{btn.classList.add('wrong');buttons[questions[i][2]].classList.add('correct')}
+ if(answered===questions.length){
+  document.getElementById('result').textContent='Natija: '+score+'/'+questions.length+' ('+Math.round(score/questions.length*100)+'%)';
+ }
+}
+</script>
+</body>
+</html>
